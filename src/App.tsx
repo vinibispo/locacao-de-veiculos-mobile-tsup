@@ -1,16 +1,7 @@
 import React from 'react';
 import Routes from './routes';
-import {Provider, DefaultTheme} from 'react-native-paper';
-import {Theme} from 'react-native-paper/lib/typescript/types';
-
-const theme: Theme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    primary: 'tomato',
-    accent: 'yellow',
-  },
-};
+import {Provider} from 'react-native-paper';
+import theme from './utils/theme';
 
 export default function App() {
   return (
