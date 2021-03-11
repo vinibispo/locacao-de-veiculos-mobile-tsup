@@ -1,16 +1,18 @@
 import {Formik} from 'formik';
 import React from 'react';
-import {Image, KeyboardAvoidingView, StyleSheet, View} from 'react-native';
+import {Image, KeyboardAvoidingView, StyleSheet} from 'react-native';
 import {Card} from 'react-native-paper';
 import * as Yup from 'yup';
 import Button from '../../components/Button';
 import TextInput from '../../components/TextInput';
+import {useAuth} from '../../contexts/AuthContext';
 
 export default function Login() {
+  const {logIn} = useAuth();
   return (
     <Formik
       initialValues={{email: '', senha: ''}}
-      onSubmit={console.log}
+      onSubmit={logIn}
       validationSchema={Yup.object().shape({
         email: Yup.string()
           .required('Informação necessária')
