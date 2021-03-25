@@ -1,4 +1,12 @@
-import React, {createContext, ReactNode, useContext, useState} from 'react';
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from '../services/api';
 import {User} from '../utils/types';
 
@@ -15,7 +23,6 @@ interface AuthContextData {
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 export function AuthProvider({children}: {children: ReactNode}): JSX.Element {
-  const [isSignedIn, setIsSignedIn] = useState(false);
   const [user, setUser] = useState({} as User);
   async function logIn({email, senha}: LoginParams): Promise<void> {
     api
@@ -27,9 +34,27 @@ export function AuthProvider({children}: {children: ReactNode}): JSX.Element {
       })
       .then((res) => {
         setUser(res.data.user);
-        setIsSignedIn(true);
+        AsyncStorage.setItem(
+          '@LocacaoVeiculos:user',
+          JSON.stringify(res.data.user),
+        );
       });
   }
+  useEffect(() => {
+    (async () => {
+      try {
+        const userStringfied = await AsyncStorage.getItem(
+          '@LocacaoVeiculos:user',
+        );
+        if (userStringfied) {
+          setUser(JSON.parse(userStringfied));
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    })();
+  }, []);
+  const isSignedIn = useMemo(() => !!user, [user]);
   return (
     <AuthContext.Provider value={{isSignedIn, logIn, user}}>
       {children}

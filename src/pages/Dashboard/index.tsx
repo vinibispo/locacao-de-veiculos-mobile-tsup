@@ -1,10 +1,11 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {View} from 'react-native';
+import {Title} from './styles';
 
 export default function Dashboard() {
   return (
     <View>
-      <Text>Bem vindo, você está na dashboard</Text>
+      <Title>Bem vindo, você está na dashboard</Title>
     </View>
   );
 }
