@@ -1,6 +1,7 @@
 import React, {
   createContext,
   ReactNode,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -18,12 +19,13 @@ interface LoginParams {
 interface AuthContextData {
   isSignedIn: boolean;
   logIn: ({email, senha}: LoginParams) => Promise<void>;
-  user: User;
+  user: User | null;
+  logOut: () => Promise<void>;
 }
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 export function AuthProvider({children}: {children: ReactNode}): JSX.Element {
-  const [user, setUser] = useState({} as User);
+  const [user, setUser] = useState<User | null>({} as User);
   async function logIn({email, senha}: LoginParams): Promise<void> {
     api
       .post('/login', {
@@ -33,13 +35,17 @@ export function AuthProvider({children}: {children: ReactNode}): JSX.Element {
         },
       })
       .then((res) => {
-        setUser(res.data.user);
+        setUser(res.data.usuario);
         AsyncStorage.setItem(
           '@LocacaoVeiculos:user',
           JSON.stringify(res.data.user),
         );
       });
   }
+  const logOut = useCallback(async () => {
+    setUser(null);
+    await AsyncStorage.removeItem('@LocacaoVeiculos:user');
+  }, []);
   useEffect(() => {
     (async () => {
       try {
@@ -56,7 +62,7 @@ export function AuthProvider({children}: {children: ReactNode}): JSX.Element {
   }, []);
   const isSignedIn = useMemo(() => !!user, [user]);
   return (
-    <AuthContext.Provider value={{isSignedIn, logIn, user}}>
+    <AuthContext.Provider value={{isSignedIn, logIn, user, logOut}}>
       {children}
     </AuthContext.Provider>
   );

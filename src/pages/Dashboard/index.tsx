@@ -1,8 +1,10 @@
 import {useNavigation} from '@react-navigation/core';
 import React from 'react';
-import {Container, Image, Wrapper, Text, BrandButton} from './styles';
+import {useAuth} from '../../contexts/AuthContext';
+import {Container, Image, Wrapper, Text, Button} from './styles';
 
 export default function Dashboard() {
+  const {logOut} = useAuth();
   const {navigate} = useNavigation();
   return (
     <Container>
@@ -14,9 +16,22 @@ export default function Dashboard() {
           }}
         />
         <Text>Bem vindo a Locacao do Loucao</Text>
-        <BrandButton onPress={() => navigate('Brand')}>
-          <Text>Cadastrar Marca</Text>
-        </BrandButton>
+        <Button onPress={() => navigate('Brand')}>
+          <Text> Listar marca</Text>
+        </Button>
+
+        <Button onPress={() => navigate('Veiculo')}>
+          <Text>Listar Veiculo</Text>
+        </Button>
+        <Button onPress={() => navigate('Reservation')}>
+          <Text>Listar Reservas</Text>
+        </Button>
+        <Button
+          onPress={() => {
+            logOut();
+          }}>
+          <Text>Sair</Text>
+        </Button>
       </Wrapper>
     </Container>
   );

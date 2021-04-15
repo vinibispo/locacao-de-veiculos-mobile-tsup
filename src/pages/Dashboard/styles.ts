@@ -31,7 +31,7 @@ export const Text = styled.Text`
   font-weight: bold;
 `;
 
-export const BrandButton = styled(RectButton)`
+export const Button = styled(RectButton)`
   background: #f2f2f2;
   border-radius: 3px;
   padding: 3px;
